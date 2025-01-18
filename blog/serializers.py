@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from .models import Blog
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -23,10 +24,22 @@ class LoginSerializer(serializers.Serializer):
         user=authenticate(username=data["username"],password=data["password"])
         if not user:
             return {"msg":"invalid credentials"}
+        
         refresh=RefreshToken.for_user(user)
         return {"msg":"logged in !!","data":{
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }}
 
+
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Blog
+        fields= ['title', 'description']
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user_id'] = user.id  # Use user_id explicitly
+        return super().create(validated_data)
+    
 
