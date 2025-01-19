@@ -2,6 +2,9 @@ from . serializers import RegisterSerializer,LoginSerializer,BlogSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+from .models import Blog
 
 # Create your views here.
 
@@ -24,6 +27,12 @@ class LoginView(APIView):
     
 
 class BlogView(APIView):
+    permission_classes=[IsAuthenticated]
+    authentication_classes=[JWTAuthentication]
+    
+    def get(self,request):
+        blogs=Blo
+ 
     def post(self,request):
         print(request.user)
         serializer=BlogSerializer(data=request.data,context={'request': request})
