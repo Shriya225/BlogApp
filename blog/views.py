@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .models import Blog
+from django.db.models import Q
 
 # Create your views here.
 
@@ -31,7 +32,17 @@ class BlogView(APIView):
     authentication_classes=[JWTAuthentication]
     
     def get(self,request):
-        blogs=Blo
+        try:
+            blogs=Blog.objects.filter(user=request.user)
+            if request.GET.get("search"):
+                search_term=request.GET.get("search")
+                blogs=Blog.objects.filter(Q(title__icontains=search_term)|Q(description__icontains=search_term))
+            serializer=BlogSerializer(blogs,many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(e)
+        
+        
  
     def post(self,request):
         print(request.user)
