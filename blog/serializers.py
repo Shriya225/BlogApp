@@ -35,7 +35,7 @@ class LoginSerializer(serializers.Serializer):
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model=Blog
-        fields= ['title', 'description']
+        fields= ['id','title', 'description']
     
     def create(self, validated_data):
         user = self.context['request'].user

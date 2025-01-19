@@ -41,9 +41,7 @@ class BlogView(APIView):
             return Response(serializer.data)
         except Exception as e:
             return Response(e)
-        
-        
- 
+            
     def post(self,request):
         print(request.user)
         serializer=BlogSerializer(data=request.data,context={'request': request})
@@ -51,3 +49,19 @@ class BlogView(APIView):
             serializer.save()
             return Response({"msg":"created succesfully!!!"})
         return Response({"msg":"cannnot create blog.","error":serializer.errors})
+
+    def patch(self,request):
+        try:
+            pk=request.data["id"]
+            blog=Blog.objects.get(pk=pk)
+        except:
+            return Response({"masg":"invalid blog id"})
+        
+        if blog.user!=request.user:
+            return Response({"msg":"u cannot update the data"})
+        serializer=BlogSerializer(blog,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+        return Response()
