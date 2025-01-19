@@ -132,12 +132,3 @@ REST_FRAMEWORK = {
     )
     
 }
-
-#    "title":"333333333333333",
-#     "description":"red data ghsd ..."
-
-# {
-# "username":"riya",
-# "password":"riyaraj23"
-
-# }
